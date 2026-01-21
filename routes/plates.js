@@ -7,38 +7,31 @@ const router = express.Router();
  * ?plate=
  * ?province=
  * ?type=
- * ?page=1
- * ?limit=10
  */
 router.get('/', async (req, res) => {
-  const {
-    plate = '',
-    province = '',
-    type = '',
-    page = 1,
-    limit = 200
-  } = req.query;
+  try {
+    const {
+      plate = '',
+      province = '',
+      type = ''
+    } = req.query;
 
-  const query = {
-    plate: { $regex: plate, $options: 'i' },
-    province: { $regex: province, $options: 'i' }
-  };
+    const query = {
+      plate: { $regex: plate, $options: 'i' },
+      province: { $regex: province, $options: 'i' }
+    };
 
-  if (type) query.type = type;
+    if (type) query.type = type;
 
-  const skip = (page - 1) * limit;
+    const data = await Plate.find(query);
 
-  const [data, total] = await Promise.all([
-    Plate.find(query).skip(skip).limit(Number(limit)),
-    Plate.countDocuments(query)
-  ]);
-
-  res.json({
-    total,
-    page: Number(page),
-    limit: Number(limit),
-    data
-  });
+    res.json({
+      total: data.length,
+      data
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;
