@@ -20,6 +20,15 @@ app.get("/", (req, res) => {
   res.json({ message: "API running" });
 });
 
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(), // server chạy bao lâu (giây)
+    timestamp: Date.now()     // thời điểm hiện tại
+  });
+});
+
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
