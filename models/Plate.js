@@ -10,6 +10,10 @@ const plateSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  registrations: {
+    type: Number,
+    default: 0
+  },
   province: {
     type: String,
     index: true
